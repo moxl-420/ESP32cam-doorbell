@@ -1,7 +1,10 @@
 # ESP32cam-doorbell
 ESP32cam-doorbell
+
  Written by moxl
+ 
  BaudRate: 115200
+ 
 //
 // Adapt chime.h   to change the sound produced by the speaker (Not required)
 // Adapt config.h  to change the user parameters
