@@ -5,14 +5,23 @@
 #include "config.h"
 #include "variables.h"
 #include "chime.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "tasksdoorbell.h"
 #include "camera.h"
 #include "esp_camera.h"
+
+
+TaskHandle_t myDingHandle = NULL;
+TaskHandle_t myPicHandle = NULL;
+int BTN_PRSS = 0;
 
 
 
 //------------------------------------------------------------------------------------------------------------
 // Written by moxl
 // BaudRate: 115200
+// !!! This needs to be build in platform.io !!!
 //
 // Adapt chime.h   to change the sound produced by the speaker (Not required)
 // Adapt config.h  to change the user parameters
@@ -33,26 +42,30 @@
 //  Thanks Reddit/r/esp32
 //------------------------------------------------------------------------------------------------------------
 
-
-
 //------------------------------------------------------------------------------------------------------------
 //setup
 //------------------------------------------------------------------------------------------------------------
 void setup() {
-  //Required
- 
+//Required
  Serial.begin(115200);
  Serial.println();
+ Serial.println("-----------------------------------------------------------------------------------------------------");
+ Serial.println("Setup Starting, please wait");
+ Serial.println("-----------------------------------------------------------------------------------------------------");
 
-
+//Started tasks
+// 0 = lowest priority
+  xTaskCreate( dingdong, "ringbell", 1024, NULL, 2, &myDingHandle );
+  xTaskCreate( picnow, "picnow", 2048, NULL, 5, &myPicHandle );
+  
 // set pins.
     pinMode (ledPin, OUTPUT);
     pinMode(buttonPin, INPUT);
 
 //set buzzerpin
     EasyBuzzer.setPin(buzzer);
-
-  //start wifi
+    
+//start wifi
   WiFi.mode(WIFI_STA);
   Serial.println();
   Serial.print("Connecting to ");
@@ -60,14 +73,14 @@ void setup() {
   WiFi.begin(ssid, password);  
   while (WiFi.status() != WL_CONNECTED) {
     Serial.print(".");
-    delay(500);
+    delay(420);
   }
   Serial.println();
   Serial.print("ESP32-CAM IP Address: ");
   Serial.println(WiFi.localIP());
-  // CAMERA_MODEL_AI_THINKER
-// Pin Layout
 
+// CAMERA_MODEL_AI_THINKER
+// Pin Layout
   //camera config
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
@@ -110,13 +123,11 @@ void setup() {
     ESP.restart();
   }
 
-  
-
-
 //-----------------------------------------------------------------------------------------------------
 //end of setup
 digitalWrite(ledPin, HIGH);
 delay(1000);
+digitalWrite(ledPin, LOW);
 Serial.println("-----------------------------------------------------------------------------------------------------");
 Serial.println("Setup Completed, starting loop");
 Serial.println("-----------------------------------------------------------------------------------------------------");
@@ -129,28 +140,37 @@ Serial.println("----------------------------------------------------------------
 void loop() {
 // Needed for buzzer to work, you delete, you no buzzer.
      EasyBuzzer.update();
-// Needed for the webserver to handle clients.
-     //server.handleClient();
+
 // read the state of the pushbutton pin:
       buttonState = digitalRead(buttonPin);
-
-
 // check if the pushbutton is pressed. If it is, the buttonState is HIGH:
-  if (buttonState == HIGH) {
-        // Button is pressed.
-          Serial.println("Button is pressed."); 
-          digitalWrite(ledPin, HIGH); 
-          sendPhoto(); 
-          dingdong();
-           ESP.restart();
-           
- 
+  if (buttonState == HIGH && BTN_PRSS == 0) {
+            BTN_PRSS = 1;
+            previousMillisButton = millis();     
+    }
+
+    // check if ok to trigger the resume.
+   if (BTN_PRSS == 1 && previousMillisButton == millis()){ 
+     if(previousMillisButton - lastPressedButton > ringTimeOut){
           
-  } else {
-    // Button not pressed:
-    digitalWrite(ledPin, LOW);
-    
-  }
+          lastPressedButton = millis();
+          digitalWrite(ledPin, HIGH);
+         
+          Serial.println("vTaskResume(myDingHandle)");
+          vTaskResume(myDingHandle);
+          Serial.println("vTaskResume(myPicHandle)");
+          vTaskResume(myPicHandle);
+          
+                    
+          
+          
+          BTN_PRSS = 0;
+
+          
+      }else{
+        BTN_PRSS = 0;
+      }
+    }
 
 
 //-----------------------------------------------------------------------------------------------------

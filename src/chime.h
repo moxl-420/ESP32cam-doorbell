@@ -14,12 +14,13 @@ const int NOOT_C = 523;
 const int NOOT_D = 587;
 const int NOOT_G = 783;
 
+
 // fill in total duration of song, or will only last songlength as declared here
 unsigned long songlength = 8000; 
 
 // procedure used make the sound by using PWN signals.
 // Use the notes provided trigger each note and adjust the time.
-void dingdong(){
+void chimechomechime(){
 
         //length of the notes - Change not required
         unsigned long notems[] = {500, 1000, 1500};    
@@ -124,9 +125,5 @@ void dingdong(){
     EasyBuzzer.stopBeep();
     
     //end of procedure
-    }
-
-
-void dingdongtest(){
-
 }
+

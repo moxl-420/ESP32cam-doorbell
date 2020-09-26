@@ -13,6 +13,10 @@ WiFiClient client;
 // Global variables
 int buttonState = 0;  
 unsigned long previousMillis = 0;   // last time image was sent  
+unsigned long previousMillisButton = 0;   // last time button was pressed.
+unsigned long lastPressedButton = 0;    // last time button was pressed before previousMillisButton
+
+
 
 #define CAMERA_MODEL_AI_THINKER
 #define PWDN_GPIO_NUM     32

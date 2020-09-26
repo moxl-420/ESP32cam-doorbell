@@ -15,16 +15,17 @@ String sendPhoto() {
   fb = esp_camera_fb_get();
   if(!fb) {
     Serial.println("Camera capture failed");
-    delay(1000);
+    delay(2000);
     ESP.restart();
   }
+
   
   Serial.println("Connecting to server: " + serverName);
 
   if (client.connect(serverName.c_str(), serverPort)) {
     Serial.println("Connection successful!");    
-    String head = "--RandomNerdTutorials\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
-    String tail = "\r\n--RandomNerdTutorials--\r\n";
+    String head = "--Moxl's doorbell thanks to RandomNerdTutorials\r\nContent-Disposition: form-data; name=\"imageFile\"; filename=\"esp32-cam.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n";
+    String tail = "\r\n--Moxl's doorbell thanks to RandomNerdTutorials--\r\n";
 
     uint16_t imageLen = fb->len;
     uint16_t extraLen = head.length() + tail.length();
@@ -53,7 +54,7 @@ String sendPhoto() {
     
     esp_camera_fb_return(fb);
     
-    int timoutTimer = 10000;
+    int timoutTimer = 5000;
     long startTimer = millis();
     boolean state = false;
     
