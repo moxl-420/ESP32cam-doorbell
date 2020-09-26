@@ -1,4 +1,6 @@
 # ESP32cam-doorbell
+This is not a functional repo at the moment.
+
 ESP32cam-doorbell
 
  Written by moxl
