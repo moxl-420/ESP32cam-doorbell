@@ -8,6 +8,9 @@
 const char* ssid = "SSID";
 const char* password = "PASSWORD OF YOUR SSID";
 
+//Howmuch time is allowed between two buttonpresses.
+unsigned long ringTimeOut = 5000;   
+
 //Declare pins
 // These are best pins to use on AI-Thinker ESP32-CAM
 // the number of the pushbutton pin
