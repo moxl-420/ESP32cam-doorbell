@@ -4,7 +4,7 @@ void dingdong (void * pvParameters) {
         while(1){
 
             vTaskSuspend(NULL);
-            //vTaskDelay(2000 / portTICK_RATE_MS);
+            vTaskDelay(2000 / portTICK_RATE_MS);
 
             EasyBuzzer.singleBeep(
             659,   // Frequency in hertz(HZ).
@@ -124,10 +124,13 @@ String getBody;
     Serial.println();
     client.stop();
     Serial.println(getBody);
+    vTaskDelay(8000 / portTICK_RATE_MS);
+    ESP.restart();
   }
   else {
     getBody = "Connection to " + serverName +  " failed.";
     Serial.println(getBody);
+    ESP.restart();
   }
  
 
