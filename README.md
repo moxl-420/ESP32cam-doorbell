@@ -1,4 +1,38 @@
 # ESP32cam-doorbell
+
+
+
+**ESP32-CAM Doorbell**
+*Low budget version*
+
+**Needed**
+- ESP32-CAM AI-Thinker
+- 5v 1amp power supply (eg: phone charger)
+- 5v Led momentary button (which includes a resistor)
+- Universal phone fisheye lens.
+- 2 x 1k resistor
+- 16v 100mf capacitor
+- A way to flash the ESP32-CAM (FTDI adapters are cheap)
+- A post image server (LAMP)
+
+**Install LAMP server**
+Can be done on multiple ways, I run a RaspberryPi Virtual Machine on a windows server.
+
+**see github projectfiles: **
+*https://github.com/moxl-420/ESP32cam-doorbell*
+
+**see wiring and download gerberfile:**
+*https://easyeda.com/moxl/doorbell*
+
+**see Thingiverseto download stl.**
+*https://www.thingiverse.com/thing:4602738*
+
+
+
+
+
+
+
 This is not a functional repo at the moment.
 
 ESP32cam-doorbell
